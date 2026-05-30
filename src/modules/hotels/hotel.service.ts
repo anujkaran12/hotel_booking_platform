@@ -5,7 +5,6 @@ import {
   HotelStatusUpdate,
 } from "./hotel.types";
 
-// Get All Hotels
 export const getAllHotels = async (filters: GetAllHotelsInput) => {
   const query: any = { status: "approved" };
 
@@ -16,7 +15,6 @@ export const getAllHotels = async (filters: GetAllHotelsInput) => {
   return hotels;
 };
 
-// Get Hotel By ID
 export const getHotelById = async (hotelId: string) => {
   const hotel = await Hotel.findById(hotelId).populate(
     "seller_id",
@@ -26,19 +24,16 @@ export const getHotelById = async (hotelId: string) => {
   return hotel;
 };
 
-// Create Hotel
 export const createHotel = async (input: CreateHotelInput) => {
   const hotel = await Hotel.create(input);
   return hotel;
 };
 
-// Update Hotel
 export const updateHotel = async (
   hotelId: string,
   sellerId: string,
   updates: Partial<CreateHotelInput>,
 ) => {
-  // check hotel exists and belongs to this seller
   const hotel = await Hotel.findOne({ _id: hotelId, seller_id: sellerId });
   if (!hotel)
     throw new Error(
@@ -51,7 +46,6 @@ export const updateHotel = async (
   return updatedHotel;
 };
 
-// Delete Hotel
 export const deleteHotel = async (hotelId: string, sellerId: string) => {
   const hotel = await Hotel.findOne({ _id: hotelId, seller_id: sellerId });
   if (!hotel)
@@ -62,7 +56,6 @@ export const deleteHotel = async (hotelId: string, sellerId: string) => {
   await Hotel.findByIdAndDelete(hotelId);
 };
 
-// Update Hotel Status (Admin)
 export const updateHotelStatus = async (
   hotelId: string,
   status: HotelStatusUpdate,

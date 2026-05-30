@@ -8,11 +8,10 @@ import {
 import { getAuthUser, getParam } from "../../utils/request";
 import { requiredFields } from "../../utils/validation";
 
-// Initiate Payment
 export const initiatePayment = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const { booking_id, gateway } = req.body;
 
@@ -45,11 +44,10 @@ export const initiatePayment = async (
   }
 };
 
-// Verify Payment
 export const verifyPayment = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const { booking_id, gateway_order_id, gateway_payment_id, signature } =
       req.body;
@@ -79,11 +77,10 @@ export const verifyPayment = async (
   }
 };
 
-// Refund Payment
 export const refundPayment = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const errors = requiredFields(req.body, {
       booking_id: "Booking ID is required",
@@ -105,11 +102,10 @@ export const refundPayment = async (
   }
 };
 
-// Get Payment By Booking
 export const getPaymentByBooking = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await paymentService.getPaymentByBooking(
       getParam(req, "bookingId"),
@@ -122,11 +118,10 @@ export const getPaymentByBooking = async (
   }
 };
 
-// Handle Webhook
 export const handleWebhook = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const signature = req.headers["x-razorpay-signature"];
 

@@ -3,11 +3,10 @@ import * as notificationService from "./notification.service";
 import { errorResponse, successResponse } from "../../utils/apiResponse";
 import { getAuthUser, getParam } from "../../utils/request";
 
-// Get My Notifications
 export const getMyNotifications = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await notificationService.getMyNotifications(
       getAuthUser(req).id,
@@ -19,11 +18,10 @@ export const getMyNotifications = async (
   }
 };
 
-// Mark As Read
 export const markAsRead = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await notificationService.markAsRead(
       getParam(req, "id"),
@@ -36,11 +34,10 @@ export const markAsRead = async (
   }
 };
 
-// Mark All As Read
 export const markAllAsRead = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     await notificationService.markAllAsRead(getAuthUser(req).id);
     successResponse(res, 200, "All notifications marked as read");
@@ -49,11 +46,10 @@ export const markAllAsRead = async (
   }
 };
 
-// Delete Notification
 export const deleteNotification = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     await notificationService.deleteNotification(
       getParam(req, "id"),

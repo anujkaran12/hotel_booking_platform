@@ -32,7 +32,6 @@ bookingRoutes.patch(
 );
 
 // seller
-
 bookingRoutes.get(
   "/hotel/:hotelId",
   authMiddleware,

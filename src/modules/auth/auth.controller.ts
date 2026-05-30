@@ -12,8 +12,7 @@ import {
   requiredFields,
 } from "../../utils/validation";
 
-// Register
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, role, phone } = req.body;
 
@@ -64,8 +63,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Login
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -93,8 +91,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Get My Profile
-export const getMe = async (req: Request, res: Response): Promise<void> => {
+export const getMe = async (req: Request, res: Response) => {
   try {
     const result = await authService.getMe(getAuthUser(req).id);
     successResponse(res, 200, "Profile fetched successfully", result);

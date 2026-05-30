@@ -10,37 +10,31 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET as string,
 });
 
-// Initiate Payment
 export const initiatePayment = async (input: InitiatePaymentInput) => {
   const { booking_id, user_id, gateway } = input;
 
-  // check booking exists and belongs to user
   const booking = await Booking.findOne({
     _id: booking_id,
     customer_id: user_id,
   });
   if (!booking) throw new Error("Booking not found");
 
-  // check booking is not already paid
   const existingPayment = await Payment.findOne({
     booking_id,
     status: "success",
   });
   if (existingPayment) throw new Error("This booking is already paid");
 
-  // check booking is not cancelled
   if (booking.status === "cancelled") {
     throw new Error("Cannot make payment for a cancelled booking");
   }
 
-  // create razorpay order
   const order = await razorpay.orders.create({
     amount: booking.total_amount * 100, // razorpay takes amount in paise
     currency: "INR",
     receipt: booking_id,
   });
 
-  // save payment record
   const payment = await Payment.create({
     booking_id,
     user_id,
@@ -67,11 +61,9 @@ export const initiatePayment = async (input: InitiatePaymentInput) => {
   };
 };
 
-// Verify Payment
 export const verifyPayment = async (input: VerifyPaymentInput) => {
   const { booking_id, gateway_order_id, gateway_payment_id, signature } = input;
 
-  // verify signature
   const body = gateway_order_id + "|" + gateway_payment_id;
   const expected = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET as string)
@@ -82,7 +74,6 @@ export const verifyPayment = async (input: VerifyPaymentInput) => {
     throw new Error("Invalid payment signature, payment verification failed");
   }
 
-  // update payment status
   const payment = await Payment.findOneAndUpdate(
     { booking_id, gateway_order_id },
     { gateway_payment_id, status: "success" },
@@ -90,15 +81,12 @@ export const verifyPayment = async (input: VerifyPaymentInput) => {
   );
   if (!payment) throw new Error("Payment record not found");
 
-  // update booking status to confirmed
   await Booking.findByIdAndUpdate(booking_id, { status: "confirmed" });
 
   return payment;
 };
 
-// Refund Payment
 export const refundPayment = async (booking_id: string, user_id: string) => {
-  // check payment exists and is successful
   const payment = await Payment.findOne({
     booking_id,
     user_id,
@@ -106,7 +94,6 @@ export const refundPayment = async (booking_id: string, user_id: string) => {
   });
   if (!payment) throw new Error("No successful payment found for this booking");
 
-  // check booking is cancelled
   const booking = await Booking.findById(booking_id);
   if (!booking) throw new Error("Booking not found");
 
@@ -114,13 +101,11 @@ export const refundPayment = async (booking_id: string, user_id: string) => {
     throw new Error("Refund is only allowed for cancelled bookings");
   }
 
-  // initiate refund on razorpay
   const refund = await razorpay.payments.refund(
     payment.gateway_payment_id as string,
     { amount: payment.amount * 100 },
   );
 
-  // update payment status
   payment.status = "refunded";
   payment.refund_id = refund.id;
   await payment.save();
@@ -135,7 +120,6 @@ export const refundPayment = async (booking_id: string, user_id: string) => {
   return payment;
 };
 
-// Get Payment By Booking
 export const getPaymentByBooking = async (
   booking_id: string,
   user_id: string,
@@ -148,9 +132,7 @@ export const getPaymentByBooking = async (
   return payment;
 };
 
-// Handle Webhook
 export const handleWebhook = async (body: any, signature: string) => {
-  // verify webhook signature
   const expected = crypto
     .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET as string)
     .update(JSON.stringify(body))
@@ -162,7 +144,6 @@ export const handleWebhook = async (body: any, signature: string) => {
 
   const event = body.event;
 
-  // handle payment failed event
   if (event === "payment.failed") {
     const { order_id } = body.payload.payment.entity;
     await Payment.findOneAndUpdate(
@@ -171,7 +152,6 @@ export const handleWebhook = async (body: any, signature: string) => {
     );
   }
 
-  // handle refund processed event
   if (event === "refund.processed") {
     const { id: refund_id, payment_id } = body.payload.refund.entity;
     await Payment.findOneAndUpdate(

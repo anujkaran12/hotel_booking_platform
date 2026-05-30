@@ -4,25 +4,20 @@ import { Hotel } from "../../models/hotel.model";
 import { createNotification } from "../notifications/notification.service";
 import { BookingStatusUpdate, CreateBookingInput } from "./booking.types";
 
-// Create Booking
 export const createBooking = async (input: CreateBookingInput) => {
   const { room_id, check_in, check_out, guests } = input;
 
-  // check room exists
   const room = await Room.findById(room_id);
   if (!room) throw new Error("Room not found");
 
-  // check room is available
   if (!room.is_available) {
     throw new Error("This room is not available for booking");
   }
 
-  // check guests dont exceed capacity
   if (guests > room.capacity) {
     throw new Error(`This room can only accommodate ${room.capacity} guests`);
   }
 
-  // check no overlapping booking exists
   const overlapping = await Booking.findOne({
     room_id,
     status: { $in: ["pending", "confirmed"] },
@@ -32,7 +27,6 @@ export const createBooking = async (input: CreateBookingInput) => {
     throw new Error("This room is already booked for the selected dates");
   }
 
-  // calculate total amount
   const nights = Math.ceil(
     (check_out.getTime() - check_in.getTime()) / (1000 * 60 * 60 * 24),
   );
@@ -48,7 +42,6 @@ export const createBooking = async (input: CreateBookingInput) => {
   return booking;
 };
 
-// Get My Bookings
 export const getMyBookings = async (customerId: string) => {
   const bookings = await Booking.find({ customer_id: customerId })
     .populate("hotel_id", "name city")
@@ -57,7 +50,6 @@ export const getMyBookings = async (customerId: string) => {
   return bookings;
 };
 
-// Get Booking By ID
 export const getBookingById = async (bookingId: string) => {
   const booking = await Booking.findById(bookingId)
     .populate("hotel_id", "name city address")
@@ -67,7 +59,6 @@ export const getBookingById = async (bookingId: string) => {
   return booking;
 };
 
-// Cancel Booking
 export const cancelBooking = async (bookingId: string, customerId: string) => {
   const booking = await Booking.findOne({
     _id: bookingId,
@@ -96,9 +87,7 @@ export const cancelBooking = async (bookingId: string, customerId: string) => {
   return booking;
 };
 
-// Get Hotel Bookings (Seller)
 export const getHotelBookings = async (hotelId: string, sellerId: string) => {
-  // check hotel belongs to seller
   const hotel = await Hotel.findOne({ _id: hotelId, seller_id: sellerId });
   if (!hotel)
     throw new Error(
@@ -112,7 +101,6 @@ export const getHotelBookings = async (hotelId: string, sellerId: string) => {
   return bookings;
 };
 
-// Update Booking Status (Seller - checkin/checkout)
 export const updateBookingStatus = async (
   bookingId: string,
   sellerId: string,
@@ -121,7 +109,6 @@ export const updateBookingStatus = async (
   const booking = await Booking.findById(bookingId).populate("hotel_id");
   if (!booking) throw new Error("Booking not found");
 
-  // check seller owns the hotel
   const hotel = await Hotel.findOne({
     _id: booking.hotel_id,
     seller_id: sellerId,
@@ -142,7 +129,6 @@ export const updateBookingStatus = async (
   return booking;
 };
 
-// Get All Bookings (Admin)
 export const getAllBookings = async () => {
   const bookings = await Booking.find()
     .populate("customer_id", "name email")

@@ -30,5 +30,5 @@ paymentRoutes.get(
   paymentController.getPaymentByBooking,
 );
 
-// webhook — no auth (verified by signature)
+// webhook: no auth because Razorpay verifies using signature
 paymentRoutes.post("/webhook", paymentController.handleWebhook);

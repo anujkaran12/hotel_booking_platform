@@ -1,13 +1,11 @@
 import { Notification } from "../../models/notification.model";
 import { CreateNotificationInput } from "./notification.types";
 
-// Create Notification — called internally from other services
 export const createNotification = async (input: CreateNotificationInput) => {
   const notification = await Notification.create(input);
   return notification;
 };
 
-// Get My Notifications
 export const getMyNotifications = async (userId: string) => {
   const notifications = await Notification.find({ user_id: userId }).sort({
     createdAt: -1,
@@ -15,7 +13,6 @@ export const getMyNotifications = async (userId: string) => {
   return notifications;
 };
 
-// Mark As Read
 export const markAsRead = async (notificationId: string, userId: string) => {
   const notification = await Notification.findOne({
     _id: notificationId,
@@ -29,7 +26,6 @@ export const markAsRead = async (notificationId: string, userId: string) => {
   return notification;
 };
 
-// Mark All As Read
 export const markAllAsRead = async (userId: string) => {
   await Notification.updateMany(
     { user_id: userId, is_read: false },
@@ -37,7 +33,6 @@ export const markAllAsRead = async (userId: string) => {
   );
 };
 
-// Delete Notification
 export const deleteNotification = async (
   notificationId: string,
   userId: string,

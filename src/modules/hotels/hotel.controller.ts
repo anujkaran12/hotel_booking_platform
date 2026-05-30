@@ -8,11 +8,10 @@ import {
 import { getAuthUser, getParam, getQueryString } from "../../utils/request";
 import { requiredFields } from "../../utils/validation";
 
-// Get All Hotels
 export const getAllHotels = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const starRating = getQueryString(req, "star_rating");
     const result = await hotelService.getAllHotels({
@@ -26,11 +25,10 @@ export const getAllHotels = async (
   }
 };
 
-// Get Hotel By ID
 export const getHotelById = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await hotelService.getHotelById(getParam(req, "id"));
     successResponse(res, 200, "Hotel fetched successfully", result);
@@ -39,11 +37,10 @@ export const getHotelById = async (
   }
 };
 
-// Create Hotel
 export const createHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const { name, description, city, address, star_rating, amenities } =
       req.body;
@@ -87,11 +84,10 @@ export const createHotel = async (
   }
 };
 
-// Update Hotel
 export const updateHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await hotelService.updateHotel(
       getParam(req, "id"),
@@ -105,11 +101,10 @@ export const updateHotel = async (
   }
 };
 
-// Delete Hotel
 export const deleteHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     await hotelService.deleteHotel(getParam(req, "id"), getAuthUser(req).id);
     successResponse(res, 200, "Hotel deleted successfully");
@@ -118,11 +113,10 @@ export const deleteHotel = async (
   }
 };
 
-// Approve Hotel (Admin)
 export const approveHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await hotelService.updateHotelStatus(
       getParam(req, "id"),
@@ -135,11 +129,10 @@ export const approveHotel = async (
   }
 };
 
-// Reject Hotel (Admin)
 export const rejectHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await hotelService.updateHotelStatus(
       getParam(req, "id"),

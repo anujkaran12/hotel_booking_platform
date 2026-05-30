@@ -8,11 +8,10 @@ import {
 import { getAuthUser, getParam } from "../../utils/request";
 import { positiveNumberError, requiredFields } from "../../utils/validation";
 
-// Get All Rooms By Hotel
 export const getRoomsByHotel = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await roomService.getRoomsByHotel(getParam(req, "hotelId"));
     successResponse(res, 200, "Rooms fetched successfully", result);
@@ -21,11 +20,10 @@ export const getRoomsByHotel = async (
   }
 };
 
-// Get Room By ID
 export const getRoomById = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await roomService.getRoomById(getParam(req, "id"));
     successResponse(res, 200, "Room fetched successfully", result);
@@ -34,11 +32,10 @@ export const getRoomById = async (
   }
 };
 
-// Create Room
 export const createRoom = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const {
       room_type,
@@ -94,11 +91,10 @@ export const createRoom = async (
   }
 };
 
-// Update Room
 export const updateRoom = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const { price_per_night, capacity, total_rooms } = req.body;
 
@@ -137,11 +133,10 @@ export const updateRoom = async (
   }
 };
 
-// Delete Room
 export const deleteRoom = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     await roomService.deleteRoom(getParam(req, "id"), getAuthUser(req).id);
     successResponse(res, 200, "Room deleted successfully");

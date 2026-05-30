@@ -8,11 +8,10 @@ import {
 import { getAuthUser, getParam } from "../../utils/request";
 import { positiveNumberError, requiredFields } from "../../utils/validation";
 
-// Create Booking
 export const createBooking = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const { hotel_id, room_id, check_in, check_out, guests } = req.body;
 
@@ -71,11 +70,10 @@ export const createBooking = async (
   }
 };
 
-// Get My Bookings
 export const getMyBookings = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await bookingService.getMyBookings(getAuthUser(req).id);
     successResponse(res, 200, "Bookings fetched successfully", result);
@@ -84,11 +82,10 @@ export const getMyBookings = async (
   }
 };
 
-// Get Booking By ID
 export const getBookingById = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await bookingService.getBookingById(getParam(req, "id"));
     successResponse(res, 200, "Booking fetched successfully", result);
@@ -97,11 +94,10 @@ export const getBookingById = async (
   }
 };
 
-// Cancel Booking
 export const cancelBooking = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await bookingService.cancelBooking(
       getParam(req, "id"),
@@ -114,11 +110,10 @@ export const cancelBooking = async (
   }
 };
 
-// Get Hotel Bookings (Seller)
 export const getHotelBookings = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await bookingService.getHotelBookings(
       getParam(req, "hotelId"),
@@ -131,8 +126,7 @@ export const getHotelBookings = async (
   }
 };
 
-// Check In (Seller)
-export const checkIn = async (req: Request, res: Response): Promise<void> => {
+export const checkIn = async (req: Request, res: Response) => {
   try {
     const result = await bookingService.updateBookingStatus(
       getParam(req, "id"),
@@ -146,8 +140,7 @@ export const checkIn = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Check Out (Seller)
-export const checkOut = async (req: Request, res: Response): Promise<void> => {
+export const checkOut = async (req: Request, res: Response) => {
   try {
     const result = await bookingService.updateBookingStatus(
       getParam(req, "id"),
@@ -161,11 +154,10 @@ export const checkOut = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Get All Bookings (Admin)
 export const getAllBookings = async (
   req: Request,
   res: Response,
-): Promise<void> => {
+) => {
   try {
     const result = await bookingService.getAllBookings();
     successResponse(res, 200, "All bookings fetched successfully", result);
