@@ -1,0 +1,590 @@
+{
+  "info": {
+    "name": "Hotel Booking Management API",
+    "description": "Postman collection for the hotel booking backend. Set baseUrl and token in collection variables before testing protected APIs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "hotelId",
+      "value": ""
+    },
+    {
+      "key": "roomId",
+      "value": ""
+    },
+    {
+      "key": "bookingId",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
+      "value": ""
+    },
+    {
+      "key": "gatewayOrderId",
+      "value": ""
+    },
+    {
+      "key": "gatewayPaymentId",
+      "value": ""
+    },
+    {
+      "key": "razorpaySignature",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Customer\",\n  \"email\": \"customer@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"customer\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Seller\",\n  \"email\": \"seller@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"seller\",\n  \"phone\": \"9876543211\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Admin\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"admin\",\n  \"phone\": \"9876543212\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hotels",
+      "item": [
+        {
+          "name": "Get All Hotels",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotel"
+          }
+        },
+        {
+          "name": "Search Hotels By City",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotel?city=Delhi&star_rating=5"
+          }
+        },
+        {
+          "name": "Get Hotel By ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotel/{{hotelId}}"
+          }
+        },
+        {
+          "name": "Create Hotel - Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Blue Star Hotel\",\n  \"description\": \"A nice hotel near city center\",\n  \"city\": \"Delhi\",\n  \"address\": \"Connaught Place, Delhi\",\n  \"star_rating\": 4,\n  \"amenities\": [\"wifi\", \"parking\", \"restaurant\"]\n}"
+            },
+            "url": "{{baseUrl}}/hotel"
+          }
+        },
+        {
+          "name": "Update Hotel - Seller",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated hotel description\",\n  \"star_rating\": 5\n}"
+            },
+            "url": "{{baseUrl}}/hotel/{{hotelId}}"
+          }
+        },
+        {
+          "name": "Delete Hotel - Seller",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/hotel/{{hotelId}}"
+          }
+        },
+        {
+          "name": "Approve Hotel - Admin",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/hotel/{{hotelId}}/approve"
+          }
+        },
+        {
+          "name": "Reject Hotel - Admin",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/hotel/{{hotelId}}/reject"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Get Rooms By Hotel",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotels/{{hotelId}}/rooms"
+          }
+        },
+        {
+          "name": "Get Room By ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/rooms/{{roomId}}"
+          }
+        },
+        {
+          "name": "Create Room - Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_type\": \"Deluxe Room\",\n  \"price_per_night\": 2500,\n  \"capacity\": 2,\n  \"total_rooms\": 10,\n  \"amenities\": [\"wifi\", \"ac\", \"tv\"],\n  \"images\": []\n}"
+            },
+            "url": "{{baseUrl}}/hotels/{{hotelId}}/rooms"
+          }
+        },
+        {
+          "name": "Update Room - Seller",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price_per_night\": 3000,\n  \"capacity\": 3\n}"
+            },
+            "url": "{{baseUrl}}/rooms/{{roomId}}"
+          }
+        },
+        {
+          "name": "Delete Room - Seller",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/rooms/{{roomId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking - Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotel_id\": \"{{hotelId}}\",\n  \"room_id\": \"{{roomId}}\",\n  \"check_in\": \"2026-06-10\",\n  \"check_out\": \"2026-06-12\",\n  \"guests\": 2\n}"
+            },
+            "url": "{{baseUrl}}/bookings"
+          }
+        },
+        {
+          "name": "Get My Bookings - Customer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/my-bookings"
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/{{bookingId}}"
+          }
+        },
+        {
+          "name": "Cancel Booking - Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/{{bookingId}}/cancel"
+          }
+        },
+        {
+          "name": "Get Hotel Bookings - Seller",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/hotel/{{hotelId}}"
+          }
+        },
+        {
+          "name": "Check In - Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/{{bookingId}}/checkin"
+          }
+        },
+        {
+          "name": "Check Out - Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings/{{bookingId}}/checkout"
+          }
+        },
+        {
+          "name": "Get All Bookings - Admin",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/bookings"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Initiate Payment - Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{bookingId}}\",\n  \"gateway\": \"razorpay\"\n}"
+            },
+            "url": "{{baseUrl}}/payments/initiate"
+          }
+        },
+        {
+          "name": "Verify Payment - Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{bookingId}}\",\n  \"gateway_order_id\": \"{{gatewayOrderId}}\",\n  \"gateway_payment_id\": \"{{gatewayPaymentId}}\",\n  \"signature\": \"{{razorpaySignature}}\"\n}"
+            },
+            "url": "{{baseUrl}}/payments/verify"
+          }
+        },
+        {
+          "name": "Refund Payment - Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{bookingId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/payments/refund"
+          }
+        },
+        {
+          "name": "Get Payment By Booking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/payments/{{bookingId}}"
+          }
+        },
+        {
+          "name": "Razorpay Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-razorpay-signature",
+                "value": "{{razorpaySignature}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"payment.failed\",\n  \"payload\": {\n    \"payment\": {\n      \"entity\": {\n        \"order_id\": \"{{gatewayOrderId}}\"\n      }\n    }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/payments/webhook"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get My Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications"
+          }
+        },
+        {
+          "name": "Mark Notification As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications/{{notificationId}}/read"
+          }
+        },
+        {
+          "name": "Mark All Notifications As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications/read-all"
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications/{{notificationId}}"
+          }
+        }
+      ]
+    }
+  ]
+}
