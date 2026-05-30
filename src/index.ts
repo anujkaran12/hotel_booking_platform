@@ -7,6 +7,7 @@ import { hotelRoutes } from "./modules/hotels/hotel.routes";
 import { roomRoutes } from "./modules/rooms/room.routes";
 import { bookingRoutes } from "./modules/bookings/booking.routes";
 import { notificationRoutes } from "./modules/notifications/notification.routes";
+import { paymentRoutes } from "./modules/payments/payment.routes";
 
 export const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/v1/hotel", hotelRoutes);
 app.use("/api/v1", roomRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 // connect DB and start server
 mongoose
