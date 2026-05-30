@@ -8,10 +8,12 @@ import { roomRoutes } from "./modules/rooms/room.routes";
 import { bookingRoutes } from "./modules/bookings/booking.routes";
 import { notificationRoutes } from "./modules/notifications/notification.routes";
 import { paymentRoutes } from "./modules/payments/payment.routes";
+import { generalLimiter } from "./middlewares/rateLimit.middleware";
 
 export const app = express();
 
 app.use(express.json());
+app.use(generalLimiter);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/hotel", hotelRoutes);
